@@ -15,7 +15,7 @@ class MainWindow(QMainWindow):
         self.schedule = Schedule_Table()
         self.current_time = QTime(9, 0)
 
-        self.input_panel = Input_Panel(self.add_schedule)
+        self.input_panel = Input_Panel(self.add_schedule, self.set_initial_time)
 
         layout = QVBoxLayout()
         layout.addWidget(self.clock)
@@ -35,3 +35,9 @@ class MainWindow(QMainWindow):
 
         self.current_time = end
         self.clock.advance_minutes(minutes)
+
+    # 初期時間設定
+    def set_initial_time(self, hour, minute):
+        self.current_time = QTime(hour, minute)
+        self.schedule.update_start_times(self.current_time)
+        self.clock.set_angles(hour, minute)
