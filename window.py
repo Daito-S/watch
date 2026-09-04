@@ -14,8 +14,10 @@ class MainWindow(QMainWindow):
         self.clock = Clock()
         self.schedule = Schedule_Table()
         self.current_time = QTime(9, 0)
+        self.initial_time = self.current_time
 
-        self.input_panel = Input_Panel(self.add_schedule, self.set_initial_time)
+        self.input_panel = Input_Panel(
+            self.add_schedule, self.set_initial_time, self.delete_schedule)
 
         layout = QVBoxLayout()
         layout.addWidget(self.clock)
@@ -39,5 +41,14 @@ class MainWindow(QMainWindow):
     # 初期時間設定
     def set_initial_time(self, hour, minute):
         self.current_time = QTime(hour, minute)
-        self.schedule.update_start_times(self.current_time)
+        self.initial_time = self.current_time
+        self.current_time = self.schedule.update_start_times(self.initial_time)
         self.clock.set_angles(hour, minute)
+
+    # 選択したスケジュールを削除
+    def delete_schedule(self):
+        if self.schedule.remove_selected_schedule():
+            self.current_time = self.schedule.update_start_times(
+                self.initial_time)
+            self.clock.set_angles(
+                self.current_time.hour(), self.current_time.minute())

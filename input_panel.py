@@ -2,10 +2,11 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLineEdit, QSpi
 
 # 入力用パネル
 class Input_Panel(QWidget):
-    def __init__(self, on_add, on_set_initial):
+    def __init__(self, on_add, on_set_initial, on_delete):
         super().__init__()
         layout_set_initial = QHBoxLayout()  # 水平レイアウト(初期時間)
-        layout_add_schedule = QHBoxLayout()  # 水平レイアウト(予定追加)
+        layout_add_schedule = QHBoxLayout()  # (予定)
+        layout_button_edit = QHBoxLayout()  # (追加・削除)
         layout = QVBoxLayout()  # 全体のレイアウト(垂直)
 
         # ---初期時間---
@@ -31,6 +32,7 @@ class Input_Panel(QWidget):
         # ---予定とその時間の追加---
         self.on_add = on_add
         self.on_set_initial = on_set_initial
+        self.on_delete = on_delete
         # 予定名のテキスト
         self.name_edit = QLineEdit()
         self.name_edit.setPlaceholderText("予定名")
@@ -41,17 +43,22 @@ class Input_Panel(QWidget):
         # 追加ボタン
         add_button = QPushButton("追加")
         add_button.clicked.connect(self.add_clicked)
+        delete_button = QPushButton("選択削除")
+        delete_button.clicked.connect(self.on_delete)
 
         # レイアウトに追加
         layout_add_schedule.addWidget(QLabel("　予定　:"))
         layout_add_schedule.addWidget(self.name_edit)
         layout_add_schedule.addWidget(QLabel("時間:"))
         layout_add_schedule.addWidget(self.time_spin)
-        layout_add_schedule.addWidget(add_button)
+        # ボタンレイアウト
+        layout_button_edit.addWidget(add_button)
+        layout_button_edit.addWidget(delete_button)
 
         # 全体のレイアウトに各部分を追加
         layout.addLayout(layout_set_initial)
         layout.addLayout(layout_add_schedule)
+        layout.addLayout(layout_button_edit)
 
         self.setLayout(layout)
 
